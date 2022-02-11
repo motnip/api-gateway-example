@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 
 import de.kadmos.usecase.savingservice.model.CheckingAccount;
 import de.kadmos.usecase.savingservice.repository.CheckingAccountRepository;
+import de.kadmos.usecase.savingservice.service.account.CheckingAccountService;
 import java.math.BigDecimal;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;

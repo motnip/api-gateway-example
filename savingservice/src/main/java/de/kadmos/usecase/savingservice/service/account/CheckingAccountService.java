@@ -1,4 +1,4 @@
-package de.kadmos.usecase.savingservice.service;
+package de.kadmos.usecase.savingservice.service.account;
 
 import de.kadmos.usecase.savingservice.exception.CheckingAccountNotFound;
 import de.kadmos.usecase.savingservice.model.CheckingAccount;
@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CheckingAccountService {
+public class CheckingAccountService implements CheckingAccountServiceInterface{
 
   private final CheckingAccountRepository accountRepository;
 
@@ -17,7 +17,8 @@ public class CheckingAccountService {
     this.accountRepository = accountRepository;
   }
 
-  void increaseBalance(String accountNumber, BigDecimal amount) {
+  @Override
+  public void increaseBalance(String accountNumber, BigDecimal amount) {
     CheckingAccount checkingAccount = getCheckingAccount(accountNumber);
 
     checkingAccount.setAmount(checkingAccount.getAmount().add(amount));
@@ -26,7 +27,8 @@ public class CheckingAccountService {
 
   }
 
-  void descreaseBalance(String accountNumber, BigDecimal amount) {
+  @Override
+  public void descreaseBalance(String accountNumber, BigDecimal amount) {
 
     CheckingAccount checkingAccount = getCheckingAccount(accountNumber);
 
