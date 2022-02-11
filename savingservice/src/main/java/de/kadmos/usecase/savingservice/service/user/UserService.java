@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserService implements UserServiceInteface {
+public class UserService implements UserServiceInterface {
 
   private final UserRepository repository;
 
@@ -16,11 +16,11 @@ public class UserService implements UserServiceInteface {
     this.repository = repository;
   }
 
-  public boolean userExist(Integer userId){
+  @Override
+  public boolean userExist(Integer userId) {
 
-      Optional<User> user = repository.findUserById(userId);
-      return user.isPresent();
-
+    Optional<User> user = repository.findUserById(userId);
+    return user.isPresent();
   }
 
 }
