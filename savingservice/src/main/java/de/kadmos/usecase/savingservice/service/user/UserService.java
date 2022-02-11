@@ -1,5 +1,6 @@
 package de.kadmos.usecase.savingservice.service.user;
 
+import de.kadmos.usecase.savingservice.exception.UserNotFoundException;
 import de.kadmos.usecase.savingservice.model.User;
 import de.kadmos.usecase.savingservice.repository.UserRepository;
 import java.util.Optional;
@@ -17,10 +18,19 @@ public class UserService implements UserServiceInterface {
   }
 
   @Override
-  public boolean userExist(Integer userId) {
+  public boolean userExists(Integer userId) {
 
     Optional<User> user = repository.findUserById(userId);
+
     return user.isPresent();
+  }
+
+  @Override
+  public User findUser(Integer userId) throws UserNotFoundException {
+
+    User user = repository.findUserById(userId)
+        .orElseThrow(() -> new UserNotFoundException(userId));
+    return user;
   }
 
 }
