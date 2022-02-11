@@ -1,10 +1,14 @@
 package de.kadmos.usecase.savingservice.service.account;
 
+import de.kadmos.usecase.savingservice.exception.CheckingAccountNotFoundException;
+import de.kadmos.usecase.savingservice.model.Balance;
 import java.math.BigDecimal;
 
 public interface CheckingAccountServiceInterface {
 
-  void increaseBalance(String accountNumber, BigDecimal amount);
+  Balance getBalance(String accountNumber) throws CheckingAccountNotFoundException;
 
-  void descreaseBalance(String accountNumber, BigDecimal amount);
+  void increaseBalance(String accountNumber, BigDecimal amount) throws CheckingAccountNotFoundException;
+
+  void descreaseBalance(String accountNumber, BigDecimal amount) throws CheckingAccountNotFoundException;
 }

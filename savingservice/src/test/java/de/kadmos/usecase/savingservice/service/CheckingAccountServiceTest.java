@@ -2,11 +2,14 @@ package de.kadmos.usecase.savingservice.service;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import de.kadmos.usecase.savingservice.exception.CheckingAccountNotFoundException;
 import de.kadmos.usecase.savingservice.model.CheckingAccount;
 import de.kadmos.usecase.savingservice.repository.CheckingAccountRepository;
 import de.kadmos.usecase.savingservice.service.account.CheckingAccountService;
@@ -44,7 +47,7 @@ class CheckingAccountServiceTest {
   }
 
   @Test
-  public void TestIncreaseBalance(){
+  public void TestIncreaseBalance() throws CheckingAccountNotFoundException {
 
     BigDecimal initialAmount = BigDecimal.valueOf(100.50);
     BigDecimal newAmount = BigDecimal.valueOf(200.25);
@@ -67,22 +70,40 @@ class CheckingAccountServiceTest {
   }
 
   @Test
-  public void TestDecreaseBalance(){
+  public void TestDecreaseBalance() throws CheckingAccountNotFoundException {
 
-    BigDecimal initialAmount = BigDecimal.valueOf(300);
-    BigDecimal withdrawAmount = BigDecimal.valueOf(200);
+    Exception exception = assertThrows(CheckingAccountNotFoundException.class, () -> repository.findCheckingAccountByAccountNumber(eq(accountNumber)));
 
-   checkingAccount.setAmount(initialAmount);
+   checkingAccount.setAmount(BigDecimal.valueOf(300));
+
+    when(repository.findCheckingAccountByAccountNumber(eq(accountNumber))).thenThrow(CheckingAccountNotFoundException.class);
+
+    sut.descreaseBalance(accountNumber, BigDecimal.valueOf(200));
+
+    verify(repository, times(0)).save(any());
+
+  }
+
+
+  @Test
+  public void whenAccountDoesNotExistThrowException() throws CheckingAccountNotFoundException {
+
+    BigDecimal initialAmount = BigDecimal.valueOf(100.50);
+    BigDecimal newAmount = BigDecimal.valueOf(200.25);
+
+    String accountNumber = "DE1234H";
+    CheckingAccount checkingAccount = new CheckingAccount();
+    checkingAccount.setAmount(initialAmount);
 
     when(repository.findCheckingAccountByAccountNumber(eq(accountNumber))).thenReturn(
         Optional.of(checkingAccount));
 
-    sut.descreaseBalance(accountNumber, withdrawAmount);
+    sut.increaseBalance(accountNumber, newAmount);
 
     verify(repository, times(1)).save(checkingAccountArgumentCaptor.capture());
 
     BigDecimal actualAmount = checkingAccountArgumentCaptor.getValue().getAmount();
-    BigDecimal expectedAmount = initialAmount.subtract(withdrawAmount);
+    BigDecimal expectedAmount = initialAmount.add(newAmount);
 
     assertThat(actualAmount.compareTo(expectedAmount), equalTo(0));
   }

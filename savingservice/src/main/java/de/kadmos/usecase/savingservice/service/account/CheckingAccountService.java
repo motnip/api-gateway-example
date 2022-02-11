@@ -1,6 +1,7 @@
 package de.kadmos.usecase.savingservice.service.account;
 
-import de.kadmos.usecase.savingservice.exception.CheckingAccountNotFound;
+import de.kadmos.usecase.savingservice.exception.CheckingAccountNotFoundException;
+import de.kadmos.usecase.savingservice.model.Balance;
 import de.kadmos.usecase.savingservice.model.CheckingAccount;
 import de.kadmos.usecase.savingservice.repository.CheckingAccountRepository;
 import java.math.BigDecimal;
@@ -8,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CheckingAccountService implements CheckingAccountServiceInterface{
+public class CheckingAccountService implements CheckingAccountServiceInterface {
 
   private final CheckingAccountRepository accountRepository;
 
@@ -18,7 +19,14 @@ public class CheckingAccountService implements CheckingAccountServiceInterface{
   }
 
   @Override
-  public void increaseBalance(String accountNumber, BigDecimal amount) {
+  public Balance getBalance(String accountNumber) throws CheckingAccountNotFoundException {
+    CheckingAccount checkingAccount = getCheckingAccount(accountNumber);
+    return new Balance(checkingAccount.getAmount(), checkingAccount.getUpdateDate());
+  }
+
+  @Override
+  public void increaseBalance(String accountNumber, BigDecimal amount)
+      throws CheckingAccountNotFoundException {
     CheckingAccount checkingAccount = getCheckingAccount(accountNumber);
 
     checkingAccount.setAmount(checkingAccount.getAmount().add(amount));
@@ -28,7 +36,8 @@ public class CheckingAccountService implements CheckingAccountServiceInterface{
   }
 
   @Override
-  public void descreaseBalance(String accountNumber, BigDecimal amount) {
+  public void descreaseBalance(String accountNumber, BigDecimal amount)
+      throws CheckingAccountNotFoundException {
 
     CheckingAccount checkingAccount = getCheckingAccount(accountNumber);
 
@@ -38,10 +47,10 @@ public class CheckingAccountService implements CheckingAccountServiceInterface{
 
   }
 
-  private CheckingAccount getCheckingAccount(String accountNumber) {
+  private CheckingAccount getCheckingAccount(String accountNumber) throws CheckingAccountNotFoundException {
     return accountRepository
         .findCheckingAccountByAccountNumber(accountNumber)
-        .orElseThrow(() -> new CheckingAccountNotFound(
+        .orElseThrow(() -> new CheckingAccountNotFoundException(
             "Account number" + accountNumber + " does not exixts"));
   }
 
