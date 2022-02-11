@@ -36,7 +36,7 @@ public class CheckingAccountService implements CheckingAccountServiceInterface {
   }
 
   @Override
-  public void descreaseBalance(String accountNumber, BigDecimal amount)
+  public void decreaseBalance(String accountNumber, BigDecimal amount)
       throws CheckingAccountNotFoundException {
 
     CheckingAccount checkingAccount = getCheckingAccount(accountNumber);

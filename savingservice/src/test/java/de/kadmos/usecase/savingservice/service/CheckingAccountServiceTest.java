@@ -78,7 +78,7 @@ class CheckingAccountServiceTest {
 
     when(repository.findCheckingAccountByAccountNumber(eq(accountNumber))).thenThrow(CheckingAccountNotFoundException.class);
 
-    sut.descreaseBalance(accountNumber, BigDecimal.valueOf(200));
+    sut.decreaseBalance(accountNumber, BigDecimal.valueOf(200));
 
     verify(repository, times(0)).save(any());
 
