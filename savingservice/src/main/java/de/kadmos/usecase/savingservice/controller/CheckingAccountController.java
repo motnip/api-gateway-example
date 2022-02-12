@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(path = "/a/savings")
+@RequestMapping(path = "/a/savings/users/{userId}/accounts/{accountId}")
 public class CheckingAccountController {
 
   private CheckingAccountServiceInterface accountService;
@@ -31,7 +31,7 @@ public class CheckingAccountController {
     this.userService = userService;
   }
 
-  @GetMapping("/users/{userId}/accounts/{accountId}/balance")
+  @GetMapping("/balance")
   public Balance getBalance(@PathVariable Integer userId, @PathVariable String accountId)
       throws UserNotFoundException, CheckingAccountNotFoundException {
 
@@ -40,7 +40,7 @@ public class CheckingAccountController {
 
   }
 
-  @PostMapping("/users/{userId}/accounts/{accountId}/deposit")
+  @PostMapping("/deposit")
   @ResponseStatus(HttpStatus.CREATED)
   public Balance deposit(
       @PathVariable Integer userId,
@@ -52,7 +52,7 @@ public class CheckingAccountController {
     return accountService.increaseBalance(accountId, amount);
   }
 
-  @PostMapping("/{userId}/accounts/{accountId}/withdraw")
+  @PostMapping("/withdraw")
   @ResponseStatus(HttpStatus.CREATED)
   public Balance withdraw(
       @PathVariable Integer userId,
