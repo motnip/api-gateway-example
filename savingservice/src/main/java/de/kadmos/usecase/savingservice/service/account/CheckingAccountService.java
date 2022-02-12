@@ -32,21 +32,22 @@ public class CheckingAccountService implements CheckingAccountServiceInterface {
 
     CheckingAccount checkingAccount = getCheckingAccount(accountNumber);
     checkingAccount.setAmount(checkingAccount.getAmount().add(amount));
+    checkingAccount.setUpdateDate(LocalDateTime.now());
     accountRepository.save(checkingAccount);
 
-    return new Balance(checkingAccount.getAmount(), LocalDateTime.now());
+    return new Balance(checkingAccount.getAmount(), checkingAccount.getUpdateDate());
   }
 
   @Override
-  public void decreaseBalance(String accountNumber, BigDecimal amount)
+  public Balance decreaseBalance(String accountNumber, BigDecimal amount)
       throws CheckingAccountNotFoundException {
 
     CheckingAccount checkingAccount = getCheckingAccount(accountNumber);
-
     checkingAccount.setAmount(checkingAccount.getAmount().subtract(amount));
-
+    checkingAccount.setUpdateDate(LocalDateTime.now());
     accountRepository.save(checkingAccount);
 
+    return new Balance(checkingAccount.getAmount(), checkingAccount.getUpdateDate());
   }
 
   private CheckingAccount getCheckingAccount(String accountNumber)
