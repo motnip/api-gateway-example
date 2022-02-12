@@ -10,7 +10,7 @@ public interface CheckingAccountServiceInterface {
 
   Balance getBalance(String accountNumber) throws CheckingAccountNotFoundException;
 
-  void increaseBalance(String accountNumber, BigDecimal amount) throws CheckingAccountNotFoundException;
+  Balance increaseBalance(String accountNumber, BigDecimal amount) throws CheckingAccountNotFoundException;
 
   void decreaseBalance(String accountNumber, BigDecimal amount) throws CheckingAccountNotFoundException;
 }

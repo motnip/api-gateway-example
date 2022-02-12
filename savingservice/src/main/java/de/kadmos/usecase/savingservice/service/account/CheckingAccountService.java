@@ -5,6 +5,7 @@ import de.kadmos.usecase.savingservice.model.Balance;
 import de.kadmos.usecase.savingservice.model.CheckingAccount;
 import de.kadmos.usecase.savingservice.repository.CheckingAccountRepository;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,19 +21,20 @@ public class CheckingAccountService implements CheckingAccountServiceInterface {
 
   @Override
   public Balance getBalance(String accountNumber) throws CheckingAccountNotFoundException {
+
     CheckingAccount checkingAccount = getCheckingAccount(accountNumber);
     return new Balance(checkingAccount.getAmount(), checkingAccount.getUpdateDate());
   }
 
   @Override
-  public void increaseBalance(String accountNumber, BigDecimal amount)
+  public Balance increaseBalance(String accountNumber, BigDecimal amount)
       throws CheckingAccountNotFoundException {
+
     CheckingAccount checkingAccount = getCheckingAccount(accountNumber);
-
     checkingAccount.setAmount(checkingAccount.getAmount().add(amount));
-
     accountRepository.save(checkingAccount);
 
+    return new Balance(checkingAccount.getAmount(), LocalDateTime.now());
   }
 
   @Override
@@ -47,7 +49,8 @@ public class CheckingAccountService implements CheckingAccountServiceInterface {
 
   }
 
-  private CheckingAccount getCheckingAccount(String accountNumber) throws CheckingAccountNotFoundException {
+  private CheckingAccount getCheckingAccount(String accountNumber)
+      throws CheckingAccountNotFoundException {
     return accountRepository
         .findCheckingAccountByAccountNumber(accountNumber)
         .orElseThrow(() -> new CheckingAccountNotFoundException(
