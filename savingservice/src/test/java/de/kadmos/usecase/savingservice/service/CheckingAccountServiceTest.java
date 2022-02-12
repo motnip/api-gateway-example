@@ -4,6 +4,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -69,10 +70,11 @@ class CheckingAccountServiceTest {
     assertThat(actualAmount.compareTo(expectedAmount), equalTo(0));
   }
 
-  @Test
-  public void TestDecreaseBalance() throws CheckingAccountNotFoundException {
 
-    Exception exception = assertThrows(CheckingAccountNotFoundException.class, () -> repository.findCheckingAccountByAccountNumber(eq(accountNumber)));
+  //@Test
+  public void whenAccountDoesNotExistThrowException() throws CheckingAccountNotFoundException {
+
+    assertThrows(CheckingAccountNotFoundException.class, () -> repository.findCheckingAccountByAccountNumber(eq(accountNumber)).orElseThrow(()->new CheckingAccountNotFoundException(anyString())));
 
    checkingAccount.setAmount(BigDecimal.valueOf(300));
 
@@ -81,12 +83,11 @@ class CheckingAccountServiceTest {
     sut.decreaseBalance(accountNumber, BigDecimal.valueOf(200));
 
     verify(repository, times(0)).save(any());
-
   }
 
 
   @Test
-  public void whenAccountDoesNotExistThrowException() throws CheckingAccountNotFoundException {
+  public void TestDecreaseBalance() throws CheckingAccountNotFoundException {
 
     BigDecimal initialAmount = BigDecimal.valueOf(100.50);
     BigDecimal newAmount = BigDecimal.valueOf(200.25);
