@@ -9,6 +9,7 @@ import de.kadmos.usecase.savingservice.service.user.UserServiceInterface;
 import java.math.BigDecimal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,20 +36,22 @@ public class CheckingAccountController {
   public Balance getBalance(@PathVariable Integer userId, @PathVariable String accountId)
       throws UserNotFoundException, CheckingAccountNotFoundException {
 
-    if (!userService.userExists(userId)) {
-      throw new UserNotFoundException(userId);
-    }
+    validateUser(userId);
     return accountService.getBalance(accountId);
 
   }
 
-  @PostMapping("/{userId}/accounts/{accountId}/deposit")
-  public HttpEntity<CheckingAccount> deposit(
-      @PathVariable String userId,
+  @PostMapping("/users/{userId}/accounts/{accountId}/deposit")
+  public HttpStatus deposit(
+      @PathVariable Integer userId,
       @PathVariable String accountId,
-      @RequestParam BigDecimal amount) {
+      @RequestParam BigDecimal amount)
+      throws UserNotFoundException, CheckingAccountNotFoundException {
 
-    return null;
+    validateUser(userId);
+
+    accountService.increaseBalance(accountId, amount);
+    return HttpStatus.CREATED;
   }
 
   @PostMapping("/{userId}/accounts/{accountId}/withdraw")
@@ -59,4 +62,11 @@ public class CheckingAccountController {
 
     return null;
   }
+
+  private void validateUser(Integer userId) throws UserNotFoundException {
+    if (!userService.userExists(userId)) {
+      throw new UserNotFoundException(userId);
+    }
+  }
+
 }
