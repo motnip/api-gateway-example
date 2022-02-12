@@ -3,6 +3,7 @@ package de.kadmos.usecase.savingservice.model;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -17,7 +18,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Setter
 @Getter
-@Entity
+@Entity(name = "accounts")
 public class CheckingAccount {
 
   @Id
@@ -27,7 +28,7 @@ public class CheckingAccount {
   private BigDecimal amount;
   private LocalDateTime creationDate;
   private LocalDateTime updateDate;
-  @ManyToOne
-  @JoinColumn(name = "user_id")
-  private User userId;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "fk_user_id")
+  private User user;
 }

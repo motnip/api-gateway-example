@@ -16,7 +16,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Setter
 @Getter
-@Entity
+@Entity(name = "users")
 public class User {
 
   @Id
@@ -26,6 +26,5 @@ public class User {
   private String surname;
   private String taxId;
   @OneToMany(mappedBy = "user")
-  //TODO make this collection lazy, we don't need it everytime
   private List<CheckingAccount> checkingAccounts;
 }
