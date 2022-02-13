@@ -13,8 +13,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-    properties = {"url=http://localhost:${wiremock.server.port}"})
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWireMock(port = 0)
 @ActiveProfiles("test")
 class RouteConfigTest {
@@ -25,7 +24,7 @@ class RouteConfigTest {
   @Test
   public void whenDestinationServerExceedTimeoutReturnTimeOutException() {
 
-    stubFor(get(urlPathEqualTo("/api/species/2/"))
+    stubFor(get(urlPathEqualTo("/path/api/a"))
         .willReturn(aResponse()
             .withHeader("Content-Type", "application/json")
             .withStatus(200)
@@ -34,21 +33,21 @@ class RouteConfigTest {
     );
 
     webClient
-        .get().uri("/droid")
+        .get().uri("/service-a/path/api/a")
         .exchange()
         .expectStatus().is5xxServerError();
 
-    stubFor(get(urlPathEqualTo("/api/species/3/"))
-        .willReturn(aResponse()
-            .withHeader("Content-Type", "application/json")
-            .withStatus(200)
-            .withFixedDelay(3000)
-        )
+    stubFor(get(urlPathEqualTo("/path/api/b"))
+            .willReturn(aResponse()
+                    .withHeader("Content-Type", "application/json")
+                    .withStatus(200)
+                    .withFixedDelay(3000)
+            )
     );
 
     webClient
-        .get().uri("/wookie")
-        .exchange()
-        .expectStatus().is5xxServerError();
+            .get().uri("/service-b/path/api/b")
+            .exchange()
+            .expectStatus().is5xxServerError();
   }
 }
