@@ -6,7 +6,7 @@ networks:
 services:
   kadmos-data:
     image: postgres
-    container_name: 'kadmos-postgres'
+    container_name: 'kadmos-data'
     ports:
       - 5432:5432
     environment:
