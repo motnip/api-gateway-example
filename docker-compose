@@ -1,0 +1,27 @@
+version: "3.2"
+
+networks:
+  kadmos-net:
+
+services:
+  kadmos-data:
+    image: postgres
+    container_name: 'kadmos-postgres'
+    ports:
+      - 5432:5432
+    environment:
+    - POSTGRES_USER=kadmos
+    - POSTGRES_PASSWORD=Pass2020!
+    - POSTGRES_DB=kadmos
+    networks:
+    - kadmos-net
+  
+  saving-service-a:
+    image: savings-a
+    container_name: 'saving-service-a'
+    #depends-on:
+    #- kadmos-postgres
+    ports:
+    - 8081:8081
+    networks:
+    - kadmos-net
