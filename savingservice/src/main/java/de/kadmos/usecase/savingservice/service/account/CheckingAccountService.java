@@ -53,8 +53,7 @@ public class CheckingAccountService implements CheckingAccountServiceInterface {
   private CheckingAccount getCheckingAccount(String accountNumber, Integer userId)
       throws CheckingAccountNotFoundException {
     return accountRepository.findCheckingAccountByAccountNumberAndUserId(accountNumber,userId)
-        .orElseThrow(() -> new CheckingAccountNotFoundException(
-            "Account number" + accountNumber + " does not exixts"));
+        .orElseThrow(() -> new CheckingAccountNotFoundException(accountNumber,userId));
   }
 
 }
