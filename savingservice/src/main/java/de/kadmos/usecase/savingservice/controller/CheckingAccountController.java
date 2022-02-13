@@ -15,13 +15,11 @@ import java.math.BigDecimal;
 public class CheckingAccountController {
 
   private CheckingAccountServiceInterface accountService;
-  private UserServiceInterface userService;
 
   @Autowired
   public CheckingAccountController(
-      CheckingAccountServiceInterface checkingAccountService, UserServiceInterface userService) {
+      CheckingAccountServiceInterface checkingAccountService) {
     this.accountService = checkingAccountService;
-    this.userService = userService;
   }
 
   @GetMapping("/balance")
