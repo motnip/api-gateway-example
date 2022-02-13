@@ -1,0 +1,11 @@
+docker run --name dev-kadmos \
+-e POSTGRES_USER=kadmos \
+-e POSTGRES_PASSWORD=Pass2020! \
+-e POSTGRES_DB=kadmos \
+--net kadmos-net \
+-p 5432:5432 \
+-d postgres
+
+
+
+docker run --name saving-service-a -p 8081:8081 --net kadmos-net -d savings-a
