@@ -4,15 +4,27 @@ networks:
   kadmos-net:
 
 services:
-  kadmos-data:
+  kadmos-data-a:
     image: postgres
-    container_name: 'kadmos-data'
+    container_name: 'kadmos-data-a'
     ports:
       - 5432:5432
     environment:
       - POSTGRES_USER=kadmos
       - POSTGRES_PASSWORD=Pass2020!
-      - POSTGRES_DB=kadmos
+      - POSTGRES_DB=kadmos_a
+    networks:
+      - kadmos-net
+
+  kadmos-data-b:
+    image: postgres
+    container_name: 'kadmos-data-b'
+    ports:
+      - 5433:5432
+    environment:
+      - POSTGRES_USER=kadmos
+      - POSTGRES_PASSWORD=Pass2020!
+      - POSTGRES_DB=kadmos_b
     networks:
       - kadmos-net
 
@@ -20,7 +32,15 @@ services:
     image: savings-a
     container_name: 'saving-service-a'
     ports:
-      - 8081:8081
+      - 9001:8081
+    networks:
+      - kadmos-net
+
+  saving-service-b:
+    image: savings-a
+    container_name: 'saving-service-a'
+    ports:
+      - 9001:8082
     networks:
       - kadmos-net
 
