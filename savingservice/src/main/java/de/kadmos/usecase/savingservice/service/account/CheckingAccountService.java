@@ -20,17 +20,17 @@ public class CheckingAccountService implements CheckingAccountServiceInterface {
   }
 
   @Override
-  public Balance getBalance(String accountNumber) throws CheckingAccountNotFoundException {
+  public Balance getBalance(String accountNumber, Integer userId) throws CheckingAccountNotFoundException {
 
-    CheckingAccount checkingAccount = getCheckingAccount(accountNumber);
+    CheckingAccount checkingAccount = getCheckingAccount(accountNumber, userId);
     return new Balance(checkingAccount.getAmount(), checkingAccount.getUpdateDate());
   }
 
   @Override
-  public Balance increaseBalance(String accountNumber, BigDecimal amount)
+  public Balance increaseBalance(BigDecimal amount,String accountNumber, Integer userId)
       throws CheckingAccountNotFoundException {
 
-    CheckingAccount checkingAccount = getCheckingAccount(accountNumber);
+    CheckingAccount checkingAccount = getCheckingAccount(accountNumber,userId);
     checkingAccount.setAmount(checkingAccount.getAmount().add(amount));
     checkingAccount.setUpdateDate(LocalDateTime.now());
     accountRepository.save(checkingAccount);
@@ -39,10 +39,10 @@ public class CheckingAccountService implements CheckingAccountServiceInterface {
   }
 
   @Override
-  public Balance decreaseBalance(String accountNumber, BigDecimal amount)
+  public Balance decreaseBalance(BigDecimal amount,String accountNumber, Integer userId)
       throws CheckingAccountNotFoundException {
 
-    CheckingAccount checkingAccount = getCheckingAccount(accountNumber);
+    CheckingAccount checkingAccount = getCheckingAccount(accountNumber, userId);
     checkingAccount.setAmount(checkingAccount.getAmount().subtract(amount));
     checkingAccount.setUpdateDate(LocalDateTime.now());
     accountRepository.save(checkingAccount);
@@ -50,10 +50,9 @@ public class CheckingAccountService implements CheckingAccountServiceInterface {
     return new Balance(checkingAccount.getAmount(), checkingAccount.getUpdateDate());
   }
 
-  private CheckingAccount getCheckingAccount(String accountNumber)
+  private CheckingAccount getCheckingAccount(String accountNumber, Integer userId)
       throws CheckingAccountNotFoundException {
-    return accountRepository
-        .findCheckingAccountByAccountNumber(accountNumber)
+    return accountRepository.findCheckingAccountByAccountNumberAndUserId(accountNumber,userId)
         .orElseThrow(() -> new CheckingAccountNotFoundException(
             "Account number" + accountNumber + " does not exixts"));
   }

@@ -3,9 +3,7 @@ package de.kadmos.usecase.savingservice.service;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -39,12 +37,15 @@ class CheckingAccountServiceTest {
 
   @Captor
   ArgumentCaptor<CheckingAccount> checkingAccountArgumentCaptor;
+  private Integer userId;
 
   @BeforeEach
   void setUp() {
     checkingAccount = new CheckingAccount();
     accountNumber = "DE1234H";
     checkingAccount.setAccountNumber(accountNumber);
+    checkingAccount.setAccountNumber(accountNumber);
+    userId = 1234;
   }
 
   @Test
@@ -57,10 +58,10 @@ class CheckingAccountServiceTest {
     CheckingAccount checkingAccount = new CheckingAccount();
     checkingAccount.setAmount(initialAmount);
 
-    when(repository.findCheckingAccountByAccountNumber(eq(accountNumber))).thenReturn(
-        Optional.of(checkingAccount));
+    when(repository.findCheckingAccountByAccountNumberAndUserId(eq(accountNumber),eq(userId)))
+            .thenReturn( Optional.of(checkingAccount));
 
-    sut.increaseBalance(accountNumber, newAmount);
+    sut.increaseBalance(newAmount,accountNumber, userId);
 
     verify(repository, times(1)).save(checkingAccountArgumentCaptor.capture());
 
@@ -70,42 +71,43 @@ class CheckingAccountServiceTest {
     assertThat(actualAmount.compareTo(expectedAmount), equalTo(0));
   }
 
-
-  //@Test
-  public void whenAccountDoesNotExistThrowException() throws CheckingAccountNotFoundException {
-
-    assertThrows(CheckingAccountNotFoundException.class, () -> repository.findCheckingAccountByAccountNumber(eq(accountNumber)).orElseThrow(()->new CheckingAccountNotFoundException(anyString())));
-
-   checkingAccount.setAmount(BigDecimal.valueOf(300));
-
-    when(repository.findCheckingAccountByAccountNumber(eq(accountNumber))).thenThrow(CheckingAccountNotFoundException.class);
-
-    sut.decreaseBalance(accountNumber, BigDecimal.valueOf(200));
-
-    verify(repository, times(0)).save(any());
-  }
-
-
   @Test
   public void TestDecreaseBalance() throws CheckingAccountNotFoundException {
 
-    BigDecimal initialAmount = BigDecimal.valueOf(100.50);
-    BigDecimal newAmount = BigDecimal.valueOf(200.25);
+    BigDecimal initialAmount = BigDecimal.valueOf(200.50);
+    BigDecimal withdrawAmount = BigDecimal.valueOf(100.25);
 
     String accountNumber = "DE1234H";
     CheckingAccount checkingAccount = new CheckingAccount();
     checkingAccount.setAmount(initialAmount);
 
-    when(repository.findCheckingAccountByAccountNumber(eq(accountNumber))).thenReturn(
+    when(repository.findCheckingAccountByAccountNumberAndUserId(eq(accountNumber),eq(userId))).thenReturn(
         Optional.of(checkingAccount));
 
-    sut.increaseBalance(accountNumber, newAmount);
+    sut.decreaseBalance(withdrawAmount, accountNumber, userId);
 
     verify(repository, times(1)).save(checkingAccountArgumentCaptor.capture());
 
     BigDecimal actualAmount = checkingAccountArgumentCaptor.getValue().getAmount();
-    BigDecimal expectedAmount = initialAmount.add(newAmount);
+    BigDecimal expectedAmount = initialAmount.subtract(withdrawAmount);
 
     assertThat(actualAmount.compareTo(expectedAmount), equalTo(0));
+  }
+
+  //@Test
+  public void whenAccountDoesNotExistThrowException() throws CheckingAccountNotFoundException {
+
+    assertThrows(CheckingAccountNotFoundException.class,
+            () -> repository.findCheckingAccountByAccountNumberAndUserId(eq(accountNumber),eq(userId))
+                    .orElseThrow(()->new CheckingAccountNotFoundException(anyString()))
+    );
+
+    checkingAccount.setAmount(BigDecimal.valueOf(300));
+
+    when(repository.findCheckingAccountByAccountNumberAndUserId(eq(accountNumber),eq(userId))).thenThrow(CheckingAccountNotFoundException.class);
+
+    sut.decreaseBalance(BigDecimal.valueOf(200), accountNumber, userId);
+
+    verify(repository, times(0)).save(any());
   }
 }

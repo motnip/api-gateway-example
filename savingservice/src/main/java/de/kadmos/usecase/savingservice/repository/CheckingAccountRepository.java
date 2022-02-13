@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CheckingAccountRepository extends CrudRepository<CheckingAccount, Integer> {
 
-  Optional<CheckingAccount> findCheckingAccountByAccountNumber(String accountNumber);
+  Optional<CheckingAccount> findCheckingAccountByAccountNumberAndUserId(String accountNumber, Integer userId);
 }

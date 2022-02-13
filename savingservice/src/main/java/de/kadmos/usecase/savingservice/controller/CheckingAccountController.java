@@ -35,8 +35,8 @@ public class CheckingAccountController {
   public Balance getBalance(@PathVariable Integer userId, @PathVariable String accountId)
       throws UserNotFoundException, CheckingAccountNotFoundException {
 
-    validateUser(userId);
-    return accountService.getBalance(accountId);
+    //validateUser(userId);
+    return accountService.getBalance(accountId, userId);
 
   }
 
@@ -48,8 +48,8 @@ public class CheckingAccountController {
       @RequestParam BigDecimal amount)
       throws UserNotFoundException, CheckingAccountNotFoundException {
 
-    validateUser(userId);
-    return accountService.increaseBalance(accountId, amount);
+    //validateUser(userId);
+    return accountService.increaseBalance(amount,accountId, userId);
   }
 
   @PostMapping("/withdraw")
@@ -60,8 +60,8 @@ public class CheckingAccountController {
       @RequestParam BigDecimal amount)
       throws CheckingAccountNotFoundException, UserNotFoundException {
 
-    validateUser(userId);
-    return accountService.decreaseBalance(accountId, amount);
+    //validateUser(userId);
+    return accountService.decreaseBalance(amount,accountId, userId);
   }
 
   private void validateUser(Integer userId) throws UserNotFoundException {
