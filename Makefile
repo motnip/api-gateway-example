@@ -3,7 +3,7 @@
 savingServiceFolder=./savingservice
 apigatewayFolder=./apigateway
 
-all: gradle-saving gradle-build-apigateway docker-saving docker-gateway  docker-run
+all: gradle-saving gradle-gateway docker-saving docker-gateway  docker-run
 
 #--- SERVICE-A RUNNER ---
 gradle-saving:
