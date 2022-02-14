@@ -3,7 +3,6 @@ package de.kadmos.usecase.savingservice.controller;
 import de.kadmos.usecase.savingservice.exception.CheckingAccountNotFoundException;
 import de.kadmos.usecase.savingservice.model.Balance;
 import de.kadmos.usecase.savingservice.service.account.CheckingAccountServiceInterface;
-import de.kadmos.usecase.savingservice.service.user.UserServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
