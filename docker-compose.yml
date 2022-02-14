@@ -4,6 +4,7 @@ networks:
   kadmos-net:
 
 services:
+
   kadmos-data-a:
     image: postgres
     container_name: 'kadmos-data-a'
@@ -19,8 +20,9 @@ services:
   kadmos-data-b:
     image: postgres
     container_name: 'kadmos-data-b'
+    command: -p 5433
     ports:
-      - 5433:5432
+      - 5433:5433
     environment:
       - POSTGRES_USER=kadmos
       - POSTGRES_PASSWORD=Pass2020!
@@ -29,22 +31,26 @@ services:
       - kadmos-net
 
   saving-service-a:
-    image: savings-a
+    image: savings
     container_name: 'saving-service-a'
     environment:
       - SPRING_PROFILES_ACTIVE=demoa
+    expose:
+      - 9001
     ports:
       - 9001:8081
     networks:
       - kadmos-net
 
   saving-service-b:
-    image: savings-a
+    image: savings
     container_name: 'saving-service-b'
     environment:
       - SPRING_PROFILES_ACTIVE=demob
+    expose:
+      - 9002
     ports:
-      - 9001:8082
+      - 9002:8082
     networks:
       - kadmos-net
 
