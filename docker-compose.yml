@@ -31,6 +31,8 @@ services:
   saving-service-a:
     image: savings-a
     container_name: 'saving-service-a'
+    environment:
+      - SPRING_PROFILES_ACTIVE=demoa
     ports:
       - 9001:8081
     networks:
@@ -38,7 +40,9 @@ services:
 
   saving-service-b:
     image: savings-a
-    container_name: 'saving-service-a'
+    container_name: 'saving-service-b'
+    environment:
+      - SPRING_PROFILES_ACTIVE=demob
     ports:
       - 9001:8082
     networks:
