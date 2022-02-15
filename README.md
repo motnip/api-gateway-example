@@ -137,3 +137,11 @@ For instance:
   make docker-gateway
 ```
 Compile the java code and build the Docker images of the API Gateway.
+
+###### Test users
+
+Service A has one users with ID 1 and Account number A
+Service B has one users with ID 1 and Account number B
+
+You can use those users to test the project.
+
