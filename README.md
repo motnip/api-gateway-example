@@ -1,5 +1,5 @@
 
-# Kadmos Usecas
+# Api Gateway with Spring Cloud Gateway example
 
 
 ## Api Gateway
